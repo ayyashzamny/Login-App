@@ -31,6 +31,6 @@ class RegisterController extends Controller
         // Automatically log in the newly registered user
         auth()->attempt($request->only('email', 'password'));
 
-        return redirect()->intended('/home'); // Redirect to the user's home page
+        return redirect()->intended('/'); // Redirect to the user's home page
     }
 }

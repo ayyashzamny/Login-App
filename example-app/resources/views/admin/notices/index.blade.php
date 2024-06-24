@@ -17,12 +17,14 @@
 
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">Your Application</a>
+
+
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav mr-auto">
                 @auth
                     <li class="nav-item">
-                        <span class="nav-link">Welcome, {{ Auth::user()->name }}!</span>
+                        <a class="navbar-brand" href="#">Welcome, {{ Auth::user()->name }}!</a>
+
                     </li>
                 @else
                     <li class="nav-item">
@@ -35,6 +37,7 @@
                     <a href="{{ route('login') }}" class="btn btn-primary">Login</a>
                 @else
                     @if(Auth::user()->is_admin)
+                        <a class="btn btn-primary" href="{{ route('admin.dashboard') }}">Admin Dashboard</a>
                         <a class="btn btn-primary" href="{{ route('admin.notices.index') }}">Manage Notices</a>
                     @endif
                     <a class="btn btn-secondary" href="{{ route('logout') }}" role="button"

@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NoticeController;
+use App\Http\Controllers\AdminDashboardController;
 
 // Authentication Routes
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -29,3 +30,7 @@ Route::post('/admin/notices', [NoticeController::class, 'store'])->name('admin.n
 Route::get('/admin/notices/{notice}/edit', [NoticeController::class, 'edit'])->name('admin.notices.edit');
 Route::put('/admin/notices/{notice}', [NoticeController::class, 'update'])->name('admin.notices.update');
 Route::delete('/admin/notices/{notice}', [NoticeController::class, 'destroy'])->name('admin.notices.destroy');
+
+
+
+Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');

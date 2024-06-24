@@ -20,6 +20,12 @@ class LoginController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
+            $user = Auth::user(); // Fetch the authenticated user
+
+            if ($user->is_admin) {
+                return redirect('/admin/dashboard');
+            }
+
             return redirect()->intended('/'); // Redirect to the user's home page
         }
 
@@ -27,6 +33,7 @@ class LoginController extends Controller
             'email' => 'The provided credentials do not match our records.',
         ]);
     }
+
 
     public function logout(Request $request)
     {
@@ -39,13 +46,13 @@ class LoginController extends Controller
         return redirect('/');
     }
 
-    protected function authenticated(Request $request, $user)
-    {
-        if ($user->is_admin) {
-            return redirect()->route('admin.dashboard');
-        }
+    // protected function authenticated(Request $request, $user)
+    // {
+    //     if ($user->is_admin) {
+    //         return redirect('/admin/dashboard');
+    //     }
 
-        return redirect()->route('home');
-    }
+    //     return redirect('/admin/dashboard');
+    // }
 
 }

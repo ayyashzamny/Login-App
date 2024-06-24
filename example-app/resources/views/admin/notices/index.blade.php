@@ -17,14 +17,11 @@
 
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-
-
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav mr-auto">
                 @auth
                     <li class="nav-item">
                         <a class="navbar-brand" href="#">Welcome, {{ Auth::user()->name }}!</a>
-
                     </li>
                 @else
                     <li class="nav-item">
@@ -53,9 +50,10 @@
     <div class="container mt-5">
         @auth
             @if(Auth::user()->is_admin)
-                <div class="d-flex justify-content-between align-items-center mb3">
+                <div class="d-flex justify-content-between align-items-center mb-3">
                     <h1>Notices</h1>
                     <a href="{{ route('admin.notices.create') }}" class="btn btn-success">Add Notice</a>
+                    <a href="#" class="btn btn-primary" id="download-pdf">Download PDF</a>
                 </div>
                 @if(session('success'))
                     <div class="alert alert-success">{{ session('success') }}</div>
@@ -137,8 +135,55 @@
     <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
     <!-- SweetAlert2 JS -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+    <!-- jsPDF Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <!-- jsPDF AutoTable Plugin -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.13/jspdf.plugin.autotable.min.js"></script>
     <!-- Custom JS -->
     <script src="{{ asset('js/editNotice.js') }}"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const { jsPDF } = window.jspdf;
+
+            $('#notices-table').DataTable();
+
+            document.getElementById('download-pdf').addEventListener('click', function () {
+                // Create a new jsPDF instance
+                const doc = new jsPDF();
+
+                // Get the table data without the Actions column
+                const data = [];
+                const headers = [];
+                $('#notices-table thead tr th').each(function (index, element) {
+                    if (index !== 3) { // Exclude Actions column
+                        headers.push($(element).text());
+                    }
+                });
+
+                data.push(headers);
+
+                $('#notices-table tbody tr').each(function () {
+                    const rowData = [];
+                    $(this).find('td').each(function (index, element) {
+                        if (index !== 3) { // Exclude Actions column
+                            rowData.push($(element).text());
+                        }
+                    });
+                    data.push(rowData);
+                });
+
+                // Add the data to the PDF
+                doc.autoTable({
+                    head: [headers],
+                    body: data.slice(1),
+                });
+
+                // Save the PDF
+                doc.save('notices.pdf');
+            });
+        });
+    </script>
 </body>
 
 </html>
